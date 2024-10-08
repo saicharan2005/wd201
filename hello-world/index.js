@@ -1,6 +1,8 @@
-const hello =()=>{
-  console.log("hello Node.js!");
+
+
+const fun =()=>{
+  console.log("Hello GitHub!");
 
 };
 
-hello()
+fun()
