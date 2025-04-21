@@ -1,88 +1,53 @@
 const http = require("http");
-
 const fs = require("fs");
-const { log } = require("console");
 
 
-// fs.readFile("home.html",(err,home)=>{
-//   console.log(home.toString());
+const minimist = require("minimist");
+const args = minimist(process.argv.slice(2));
 
-//   if(err){
-//     throw err;
+const port = parseInt(args.port);
 
-//   }
+let homeContent = "";
+let projectContent = "";
 
-//   http
-//  .createServer((req,res)=>{
-//   res.writeHeader(200,{"content-type":"text/html"});
-//   res.write(home);
-//   res.end();
-  
-// }).listen(3000);
-// })
-
-
-
-fs.readFile("home.html",(err,home)=>{
-  console.log(home.toString());
-
-  if(err){
-    throw err;
-
+fs.readFile("home.html", (err, home) => {
+  if (err) {
+    console.log(err);
   }
+  homeContent = home;
+});
 
-  homeContent=home;
-})
-
-fs.readFile("project.html",(err,project)=>{
-  console.log(project.toString());
-
-  if(err){
-    throw err;
-
+fs.readFile("project.html", (err, project) => {
+  if (err) {
+    console.log(err);
   }
+  projectContent = project;
+});
 
-  projectContent=project;
-})
+fs.readFile("registration.html", (err, registration) => {
+  if (err) {
+    console.log(err);
+  }
+  registrationContent = registration;
+});
 
-fs.readFile("registration.html" ,(err,registration)=>{
-  console.log(registration.toString());
-  
-    if(err){
-      throw err;
-    }
-
-    registrationContent =registration;
-})
-
-const args = process.argv;
-const port = parseInt(args[2]);
-
-
-http.createServer((req,res)=>{
-  let url =req.url;
-
-  res.writeHeader(200,{'content-type':"text/html"});
-
-  switch(url){
-    case "/project":
-      res.write(projectContent);
-      res.end();
-      break;
-
-    case "/registration":
+http
+  .createServer((req, res) => {
+    let url = req.url;
+    res.writeHead(200, { "Content-Type": "text/html" });
+    switch (url) {
+      case "/project":
+        res.write(projectContent);
+        res.end();
+        break;
+      case "/registration":
         res.write(registrationContent);
         res.end();
         break;
-
-
       default:
         res.write(homeContent);
         res.end();
         break;
-  }
-}).listen(port)
-
-
-
-
+    }
+  })
+  .listen(port);
