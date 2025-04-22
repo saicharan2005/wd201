@@ -43,4 +43,4 @@ const todoList = () => {
   };
 };
 
-module.exports = todoList
+module.exports = todoList;
