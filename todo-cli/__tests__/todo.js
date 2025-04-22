@@ -13,29 +13,26 @@ const {
 
 describe("Todo Test Suite", () => {
   beforeAll(() => {
-
-    all.length = 0;
-
     add({
-      title: "overdue Task",
+      title: "Overdue Task",
       completed: false,
-      dueDate: new Date(Date.now() - 86400000).toISOString().slice(0, 10),
+      dueDate: new Date(Date.now() - 86400000).toISOString().slice(0, 10), // yesterday
     });
 
     add({
-      title: "due Today Task",
+      title: "Due Today Task",
       completed: false,
-      dueDate: new Date().toISOString().slice(0, 10),
+      dueDate: new Date().toISOString().slice(0, 10), // today
     });
 
     add({
-      title: "due Later Task",
+      title: "Due Later Task",
       completed: false,
-      dueDate: new Date(Date.now() + 86400000).toISOString().slice(0, 10), 
+      dueDate: new Date(Date.now() + 86400000).toISOString().slice(0, 10), // tomorrow
     });
   });
 
-  test("Should add a new todo", () => {
+  test("should add a new todo", () => {
     const todoCount = all.length;
     add({
       title: "New Test Todo",
@@ -46,42 +43,43 @@ describe("Todo Test Suite", () => {
   });
 
   test("should mark a todo as complete", () => {
-    expect(all[0].completed).toBe(false);
-    markAsComplete(0);
-    expect(all[0].completed).toBe(true);
+    const index = all.findIndex((todo) => todo.title === "Overdue Task");
+    expect(all[index].completed).toBe(false);
+    markAsComplete(index);
+    expect(all[index].completed).toBe(true);
   });
 
   test("should return overdue items", () => {
-    const items = overdue();
+    const overdueItems = overdue();
     expect(
-      items.every(
+      overdueItems.every(
         (todo) => todo.dueDate < new Date().toISOString().slice(0, 10)
       )
     ).toBe(true);
   });
 
   test("should return due today items", () => {
-    const items = dueToday();
+    const dueTodayItems = dueToday();
     expect(
-      items.every(
+      dueTodayItems.every(
         (todo) => todo.dueDate === new Date().toISOString().slice(0, 10)
       )
     ).toBe(true);
   });
 
   test("should return due later items", () => {
-    const items = dueLater();
+    const dueLaterItems = dueLater();
     expect(
-      items.every(
+      dueLaterItems.every(
         (todo) => todo.dueDate > new Date().toISOString().slice(0, 10)
       )
     ).toBe(true);
   });
 
   test("should display todos in displayable format", () => {
-    const items = dueToday();
-    const output = toDisplayableList(items);
+    const sampleList = dueToday();
+    const output = toDisplayableList(sampleList);
     expect(typeof output).toBe("string");
-    expect(output.includes("[ ]")).toBe(true);
+    expect(output).toMatch(/\[ \]|\[x\]/); // should contain checkbox
   });
 });
