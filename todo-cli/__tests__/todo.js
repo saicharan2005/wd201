@@ -1,4 +1,3 @@
-
 /* eslint-disable no-undef */
 const todoList = require("../todo");
 
@@ -10,10 +9,10 @@ const formattedDate = (date) => {
 let dateToday = new Date();
 let today = formattedDate(new Date());
 let yesterday = formattedDate(
-  new Date(new Date().setDate(dateToday.getDate() - 1)),
+  new Date(new Date().setDate(dateToday.getDate() - 1))
 );
 let tomorrow = formattedDate(
-  new Date(new Date().setDate(dateToday.getDate() + 1)),
+  new Date(new Date().setDate(dateToday.getDate() + 1))
 );
 
 describe("Todolist Test Suit", () => {
@@ -72,3 +71,21 @@ describe("Todolist Test Suit", () => {
   });
 });
 
+const db = require("../models");
+
+describe("Todolist Test Suite", () => {
+  beforeAll(async () => {
+    await db.sequelize.sync({ force: true });
+  });
+
+  test("Should add new todo", async () => {
+    const todoItemsCount = await db.Todo2.count();
+    await db.Todo2.addTask({
+      title: "Test todo",
+      completed: false,
+      dueDate: new Date(),
+    });
+    const newTodoItemsCount = await db.Todo2.count();
+    expect(newTodoItemsCount).toBe(todoItemsCount + 1);
+  });
+});
