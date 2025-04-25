@@ -1,11 +1,11 @@
-/* eslint-disable no-undef */
 // addTodo.js
+// eslint-disable-next-line no-undef
 var argv = require("minimist")(process.argv.slice(2));
 const db = require("./models/index");
 
 const createTodo = async (params) => {
   try {
-    await db.Todo2.addTask(params);
+    await db.Todo.addTask(params);
   } catch (error) {
     console.error(error);
   }
@@ -27,5 +27,5 @@ const getJSDate = (days) => {
     );
   }
   await createTodo({ title, dueDate: getJSDate(dueInDays), completed: false });
-  await db.Todo2.showList();
+  await db.Todo.showList();
 })();
