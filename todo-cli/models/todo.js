@@ -38,36 +38,34 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     static async overdue() {
-      // FILL IN HERE TO RETURN OVERDUE ITEMS
-      const todo = Todo2.findAll({
+      const today = new Date().toISOString().slice(0, 10);
+      return await Todo2.findAll({
         where: {
-          dueDate: { [Op.lt]: new Date() },
+          dueDate: {
+            [Op.lt]: today,
+          },
         },
       });
-      return await todo;
     }
 
     static async dueToday() {
-      // FILL IN HERE TO RETURN ITEMS DUE tODAY
       const today = new Date().toISOString().slice(0, 10);
-      const todos = Todo2.findAll({
+      return await Todo2.findAll({
         where: {
           dueDate: today,
-          completed: false,
         },
       });
-      return await todos;
     }
 
     static async dueLater() {
-      // FILL IN HERE TO RETURN ITEMS DUE LATER
-      const dueLate = Todo2.findAll({
+      const today = new Date().toISOString().slice(0, 10);
+      return await Todo2.findAll({
         where: {
-          dueDate: { [Op.gt]: new Date() },
-          completed: false,
+          dueDate: {
+            [Op.gt]: today,
+          },
         },
       });
-      return await dueLate;
     }
 
     static async markAsComplete(id) {
@@ -84,20 +82,16 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     displayableString() {
-      let checkbox = this.completed ? "[x]" : "[ ]";
-      let todayDate = new Date().toISOString().slice(0, 10);
-      let overDue = this.dueDate > todayDate;
+      const checkbox = this.completed ? "[x]" : "[ ]";
+      const todayDate = new Date().toISOString().slice(0, 10);
 
       if (this.dueDate === todayDate) {
         return `${this.id}. ${checkbox} ${this.title}`;
-      } else if (this.completed && overDue) {
-        return `${this.id}. [x] ${this.title} ${this.dueDate}`;
       } else {
         return `${this.id}. ${checkbox} ${this.title} ${this.dueDate}`;
       }
     }
-
-    }
+  }
   
   Todo2.init(
     {
